@@ -10,6 +10,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.Assert;
 import pojos.Client;
+import pojos.Invoice;
 import pojos.Item;
 import pojos.World;
 
@@ -31,7 +32,7 @@ public class GeneralStepDefinitions {
     @And("I execute GET request at URL: {string}")
     public void iExecuteGETRequestAt(String uri) {
         world.response = world.requestSpecification.get(uri);
-        System.out.println("Response:" + world.response.getBody().asString());
+        world.response.prettyPrint();
     }
 
     @Then("status code should be {int}")
@@ -47,7 +48,7 @@ public class GeneralStepDefinitions {
     @And("I execute POST request at URL: {string}")
     public void iExecutePOSTRequestAt(String uri) {
         world.response = world.requestSpecification.post(uri);
-        System.out.println("Response:" + world.response.getBody().asString());
+        world.response.prettyPrint();
     }
 
     @Given("I set content type to Json")
@@ -110,6 +111,45 @@ public class GeneralStepDefinitions {
 
     @When("I delete the last created entity at path {string}")
     public void iDeleteTheLastCreatedEntityAtPath(String path) {
-        world.requestSpecification.delete(path + "/" + world.id);
+        world.response = world.requestSpecification.delete(path + "/" + world.id);
+        world.response.prettyPrint();
+    }
+
+    @And("I set client city {string}")
+    public void iSetClientCity(String city) {
+        world.client.setFirm_town(city);
+
+    }
+
+    @And("I set client address {string}")
+    public void iSetClientAddress(String address) {
+        world.client.setFirm_addr(address);
+    }
+
+    @And("I set client vat registration to {string}")
+    public void iSetClientVatRegistrationTo(String isRegistered) {
+        world.client.setFirm_is_reg_vat(isRegistered);
+    }
+
+    @When("I start building new Invoice")
+    public void iStartBuildingNewInvoice() {
+        world.invoice = Invoice.builder().build();
+    }
+
+
+    @And("I set item name {string}")
+    public void iSetItemTheName(String name) {
+        world.item.setName(name);
+    }
+
+    @And("I set client mol to {string}")
+    public void iSetClientMolTo(String mol) {
+        world.client.setFirm_mol(mol);
+    }
+
+    @And("value found at path {string} should be {string}")
+    public void valueFoundAtPathShouldBe(String path, String value) {
+        world.value = JsonPath.read(world.response.getBody().asString(), path).toString();
+        Assert.assertEquals(value,world.value);
     }
 }

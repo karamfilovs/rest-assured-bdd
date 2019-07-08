@@ -8,5 +8,8 @@ public class World {
     public Response response;
     public Item item;
     public Client client;
+    public Invoice invoice;
     public String id;
+    public String value;
 }
+

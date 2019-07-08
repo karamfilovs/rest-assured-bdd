@@ -22,10 +22,20 @@ Feature: Test for INV.bg website
     When I execute GET request at URL: "/clients"
     Then status code should be 200
 
+    Scenario Outline: Can create new client
+      When I start building new Client
+      And I set client firm_name "Pragmatic"
+      And I set the current client as body
+      And I execute POST request at URL: "/client"
+      Then status code should be 400
+
+      Examples:
+      |firm_name|  |
+
 
   Scenario: Can create/get/delete new item
     When I start building new Item
-    And I set item name "Кафе12371"
+    And I set item name "Alex"
     And I set item price_for_quantity "5"
     And I set item quantity_unit "кг"
     And I set the current item as body
